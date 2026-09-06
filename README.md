@@ -20,6 +20,10 @@ pH、电导率等参数的实时同步采集；通过边缘计算完成多传感
 <details>
 <summary>更多界面截图</summary>
 
+暗色主题（面板内置亮/暗切换，跟随偏好记忆）：
+
+![暗色主题](docs/images/dashboard-dark.png)
+
 内嵌终端 —— SSE 实时推送系统全部日志流：
 
 ![内嵌终端](docs/images/terminal.png)

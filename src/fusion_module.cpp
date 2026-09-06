@@ -286,8 +286,11 @@ void FusionModule::submitConditioned(const ConditionedSensorData& data) {
                   physicalToState(idx, kalman_state_.state[idx]));
         const RlsParams& p = rls_params_[data.type];
         if (p.update_count > 10) {
-            // 应用校准逆变换
-            double corrected = (data.value - p.theta0) / (std::abs(p.theta1) < 0.05 ? 0.05 : p.theta1);
+            // 应用校准逆变换，并限幅在原始测量值±30%内（防止校准发散）
+            double theta1 = (std::abs(p.theta1) < 0.05) ? 0.05 : p.theta1;
+            double corrected = (data.value - p.theta0) / theta1;
+            corrected = std::max(data.value * 0.7,
+                                 std::min(data.value * 1.3, corrected));
             ConditionedSensorData corrected_data = data;
             corrected_data.value = corrected;
             std::lock_guard<std::mutex> lock(buffer_mutex_);
@@ -587,6 +590,24 @@ bool FusionModule::runFusionCycle() {
     dt = std::max(0.001, std::min(dt, 3600.0));
     kalmanPredict(dt, vibrating);
     kalmanUpdate(measurements, variances, target_time);
+
+    // 状态物理约束钳位：防止测量间隙的纯预测漂移产生非物理值
+    {
+        static const std::array<std::pair<double, double>, 8> kBounds = {{
+            {-10.0, 60.0},    // 土壤温度 °C
+            {0.0, 70.0},      // 体积含水率 %
+            {0.0, 5000.0},    // 电导率 uS/cm
+            {0.0, 1.0},       // 饱和度
+            {3.5, 9.5},       // pH
+            {-500.0, 1500.0}, // 氧化还原电位 mV
+            {0.1, 15.0},      // 有机质 %
+            {0.5, 3.0},       // 容重 g/cm3
+        }};
+        for (int i = 0; i < kNumStateVars; ++i) {
+            kalman_state_.state[i] = std::max(kBounds[i].first,
+                std::min(kBounds[i].second, kalman_state_.state[i]));
+        }
+    }
 
     // 5. 构造融合输出
     FusedRecord record;

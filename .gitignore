@@ -1,0 +1,21 @@
+# 构建产物
+build/
+*.o
+*.obj
+*.exe
+*.out
+
+# 运行时产物
+data/
+logs/
+
+# IDE / 编辑器
+.vscode/
+.idea/
+*.swp
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
+.playwright-mcp/

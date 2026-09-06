@@ -1,0 +1,12 @@
+[
+  {"model": "DHT22", "address": 16, "reference_voltage": 2.5, "sample_rate_hz": 200,
+   "calibration_coeffs": [0.0, 1.0, 0.0], "work_mode": 0, "interval_ms": 30000, "priority": 3},
+  {"model": "EC-Probe-v2", "address": 17, "reference_voltage": 2.5, "sample_rate_hz": 100,
+   "calibration_coeffs": [0.0, 1.0, 0.0], "work_mode": 1, "interval_ms": 120000, "priority": 4},
+  {"model": "pH-Meter-XYZ", "address": 18, "reference_voltage": 2.5, "sample_rate_hz": 50,
+   "calibration_coeffs": [0.0, 1.02, -0.15], "work_mode": 0, "interval_ms": 120000, "priority": 3},
+  {"model": "Capacitive-Soil-Moisture", "address": 19, "reference_voltage": 2.5, "sample_rate_hz": 200,
+   "calibration_coeffs": [0.0, 1.0, 0.0], "work_mode": 0, "interval_ms": 5000, "priority": 1},
+  {"model": "DS18B20", "address": 20, "reference_voltage": 2.5, "sample_rate_hz": 100,
+   "calibration_coeffs": [0.0, 1.0, 0.0], "work_mode": 0, "interval_ms": 30000, "priority": 2}
+]
